@@ -28,12 +28,39 @@ int max(int a, int b) {
     return b;
 }
 
+int min(int a, int b) {
+    if (a < b)
+        return a;
+    return b;
+}
+
 int pixel_igual(Pixel p1, Pixel p2) {
     if (p1.red == p2.red &&
         p1.green == p2.green &&
         p1.blue == p2.blue)
         return 1;
     return 0;
+}
+
+Image ler_imagem (Image img) {
+     // read type of image
+    char p3[4];
+    scanf("%s", p3);
+
+    // read width height and color of image
+    int max_color;
+    scanf("%u %u %d", &img.width, &img.height, &max_color);
+
+    // read all pixels of image
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            scanf("%hu %hu %hu", &img.pixel[i][j][0],
+                                 &img.pixel[i][j][1],
+                                 &img.pixel[i][j][2]);
+
+        }
+    }
+    return img;
 }
 
 
@@ -125,27 +152,10 @@ Image cortar_imagem(Image img, int x, int y, int width, int height) {
     return cortada;
 }
 
-
 int main() {
+
     Image img;
-
-    // read type of image
-    char p3[4];
-    scanf("%s", p3);
-
-    // read width height and color of image
-    int max_color;
-    scanf("%u %u %d", &img.width, &img.height, &max_color);
-
-    // read all pixels of image
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            scanf("%hu %hu %hu", &img.pixel[i][j][0],
-                                 &img.pixel[i][j][1],
-                                 &img.pixel[i][j][2]);
-
-        }
-    }
+    img = ler_imagem(img);
 
     int n_opcoes;
     scanf("%d", &n_opcoes);
