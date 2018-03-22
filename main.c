@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+
+
 typedef struct _pixel {
     unsigned short int red;
     unsigned short int green;
@@ -8,9 +13,9 @@ typedef struct _pixel {
 
 typedef struct _image {
     // [width][height][rgb]
-    // 0 -> r
-    // 1 -> g
-    // 2 -> b
+    // 0 -> red
+    // 1 -> green
+    // 2 -> blue
     unsigned short int pixel[512][512][3];
     unsigned int width;
     unsigned int height;
@@ -36,13 +41,13 @@ Image escala_de_cinza(Image img) {
 
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            int mean = img.pixel[i][j][0] +
-                        img.pixel[i][j][1] +
-                        img.pixel[i][j][2];
+            int mean = img.pixel[i][j][RED] +
+                        img.pixel[i][j][GREEN] +
+                        img.pixel[i][j][BLUE];
             mean /= 3;
-            img.pixel[i][j][0] = mean;
-            img.pixel[i][j][1] = mean;
-            img.pixel[i][j][2] = mean;
+            img.pixel[i][j][RED] = mean;
+            img.pixel[i][j][GREEN] = mean;
+            img.pixel[i][j][BLUE] = mean;
         }
     }
 
