@@ -140,13 +140,23 @@ Image rotacionar90direita(Image img) {
 
     for (unsigned int i = 0, y = 0; i < rotacionada.height; ++i, ++y) {
         for (int j = rotacionada.width - 1, x = 0; j >= 0; --j, ++x) {
-            rotacionada.pixel[i][j][0] = img.pixel[x][y][0];
-            rotacionada.pixel[i][j][1] = img.pixel[x][y][1];
-            rotacionada.pixel[i][j][2] = img.pixel[x][y][2];
+            rotacionada.pixel[i][j][RED] = img.pixel[x][y][RED];
+            rotacionada.pixel[i][j][GREEN] = img.pixel[x][y][GREEN];
+            rotacionada.pixel[i][j][BLUE] = img.pixel[x][y][BLUE];
         }
     }
 
     return rotacionada;
+}
+
+Image quantidade_de_rotacao(Image img) {
+    int quantas_vezes = 0;
+    scanf("%d", &quantas_vezes);
+    quantas_vezes %= 4;
+    for (int i = 0; i < quantas_vezes; ++i) {
+        img = rotacionar90direita(img);
+    }
+    return img;
 }
 
 void inverter_cores(unsigned short int pixel[512][512][3],
@@ -205,12 +215,7 @@ int main() {
                 break;
             }
             case 4: { // Rotacao
-                int quantas_vezes = 0;
-                scanf("%d", &quantas_vezes);
-                quantas_vezes %= 4;
-                for (int j = 0; j < quantas_vezes; ++j) {
-                    img = rotacionar90direita(img);
-                }
+                img = quantidade_de_rotacao(img);
                 break;
             }
             case 5: { // Espelhamento
