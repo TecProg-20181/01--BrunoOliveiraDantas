@@ -23,24 +23,16 @@ typedef struct _image {
 } Image;
 
 
-int max(int a, int b) {
+int maior_numero(int a, int b) {
     if (a > b)
         return a;
     return b;
 }
 
-int min(int a, int b) {
+int menor_numero(int a, int b) {
     if (a < b)
         return a;
     return b;
-}
-
-int pixel_igual(Pixel p1, Pixel p2) {
-    if (p1.red == p2.red &&
-        p1.green == p2.green &&
-        p1.blue == p2.blue)
-        return 1;
-    return 0;
 }
 
 Image ler_imagem (Image img) {
@@ -55,9 +47,9 @@ Image ler_imagem (Image img) {
     // read all pixels of image
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            scanf("%hu %hu %hu", &img.pixel[i][j][0],
-                                 &img.pixel[i][j][1],
-                                 &img.pixel[i][j][2]);
+            scanf("%hu %hu %hu", &img.pixel[i][j][RED],
+                                 &img.pixel[i][j][GREEN],
+                                 &img.pixel[i][j][BLUE]);
 
         }
     }
@@ -73,9 +65,9 @@ Image printar_imagem(Image img) {
     // print pixels of image
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            printf("%hu %hu %hu ", img.pixel[i][j][0],
-                                   img.pixel[i][j][1],
-                                   img.pixel[i][j][2]);
+            printf("%hu %hu %hu ", img.pixel[i][j][RED],
+                                   img.pixel[i][j][GREEN],
+                                   img.pixel[i][j][BLUE]);
 
         }
         printf("\n");
@@ -109,33 +101,37 @@ Image filtro_sepia( Image img) {
             pixel[BLUE] = img.pixel[i][j][BLUE];
 
             int p =  pixel[RED] * .393 + pixel[GREEN] * .769 + pixel[BLUE] * .189;
-            int menor_r = min(255, p);
+            int menor_r = menor_numero(255, p);
             img.pixel[i][j][RED] = menor_r;
 
             p =  pixel[RED] * .349 + pixel[GREEN] * .686 + pixel[BLUE] * .168;
-            menor_r = min(255, p);
+            menor_r = menor_numero(255, p);
             img.pixel[i][j][GREEN] = menor_r;
 
             p =  pixel[RED] * .272 + pixel[GREEN] * .534 + pixel[BLUE] * .131;
-            menor_r = min(255, p);
+            menor_r = menor_numero(255, p);
             img.pixel[i][j][BLUE] = menor_r;
         }
     }
     return img;
 }
 
-void blur(unsigned int height, unsigned short int pixel[512][512][3], int size, unsigned int width) {
-    for (unsigned int i = 0; i < height; ++i) {
-        for (unsigned int j = 0; j < width; ++j) {
-            Pixel mean = {0, 0, 0};
+Image blur(Image img) {
+    int size = 0;
+    scanf("%d", &size);
 
-            int menor_h = (height - 1 > i + size/2) ? i + size/2 : height - 1;
-            int min_w = (width - 1 > j + size/2) ? j + size/2 : width - 1;
-            for(int x = (0 > i - size/2 ? 0 : i - size/2); x <= menor_h; ++x) {
-                for(int y = (0 > j - size/2 ? 0 : j - size/2); y <= min_w; ++y) {
-                    mean.red += pixel[x][y][0];
-                    mean.green += pixel[x][y][1];
-                    mean.blue += pixel[x][y][2];
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            Pixel mean = {0, 0, 0};
+            
+            int menor_height = menor_numero(img.height - 1, i + size/2);
+            int min_width = menor_numero(img.width - 1, j + size/2);
+
+            for(int x = maior_numero(0, i - size/2) ; x <= menor_height; ++x) {
+                for(int y = maior_numero(0, j - size/2) ; y <= min_width; ++y) {
+                    mean.red += img.pixel[x][y][RED];
+                    mean.green += img.pixel[x][y][GREEN];
+                    mean.blue += img.pixel[x][y][BLUE];
                 }
             }
 
@@ -143,11 +139,12 @@ void blur(unsigned int height, unsigned short int pixel[512][512][3], int size, 
             mean.green /= size * size;
             mean.blue /= size * size;
 
-            pixel[i][j][0] = mean.red;
-            pixel[i][j][1] = mean.green;
-            pixel[i][j][2] = mean.blue;
+            img.pixel[i][j][RED] = mean.red;
+            img.pixel[i][j][GREEN] = mean.green;
+            img.pixel[i][j][BLUE] = mean.blue;
         }
     }
+    return img;
 }
 
 Image rotacionar90direita(Image img) {
@@ -265,9 +262,7 @@ int main() {
                 break;
             }
             case 3: { // Blur
-                int size = 0;
-                scanf("%d", &size);
-                blur(img.height, img.pixel, size, img.width);
+                img = blur(img);
                 break;
             }
             case 4: { // Rotacao
