@@ -203,17 +203,22 @@ Image inverter_cores(Image img) {
     return img;
 }
 
-Image cortar_imagem(Image img, int x, int y, int width, int height) {
+Image cortar_imagem(Image img) {
+    int x, y;
+    scanf("%d %d", &x, &y);
+    int new_width, new_height;
+    scanf("%d %d", &new_width, &new_height);
+
     Image cortada;
 
-    cortada.width = width;
-    cortada.height = height;
+    cortada.width = new_width;
+    cortada.height = new_height;
 
-    for(int i = 0; i < height; ++i) {
-        for(int j = 0; j < width; ++j) {
-            cortada.pixel[i][j][0] = img.pixel[i + y][j + x][0];
-            cortada.pixel[i][j][1] = img.pixel[i + y][j + x][1];
-            cortada.pixel[i][j][2] = img.pixel[i + y][j + x][2];
+    for(int i = 0; i < new_height; ++i) {
+        for(int j = 0; j < new_width; ++j) {
+            cortada.pixel[i][j][RED] = img.pixel[i + y][j + x][RED];
+            cortada.pixel[i][j][GREEN] = img.pixel[i + y][j + x][GREEN];
+            cortada.pixel[i][j][BLUE] = img.pixel[i + y][j + x][BLUE];
         }
     }
 
@@ -260,12 +265,7 @@ int main() {
                 break;
             }
             case 7: { // Cortar Imagem
-                int x, y;
-                scanf("%d %d", &x, &y);
-                int w, h;
-                scanf("%d %d", &w, &h);
-
-                img = cortar_imagem(img, x, y, w, h);
+                img = cortar_imagem(img);
                 break;
             }
         }
