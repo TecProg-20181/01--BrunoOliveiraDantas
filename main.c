@@ -64,6 +64,24 @@ Image ler_imagem (Image img) {
     return img;
 }
 
+Image printar_imagem(Image img) {
+    // print type of image
+    printf("P3\n");
+    // print width height and color of image
+    printf("%u %u\n255\n", img.width, img.height);
+
+    // print pixels of image
+    for (unsigned int i = 0; i < img.height; ++i) {
+        for (unsigned int j = 0; j < img.width; ++j) {
+            printf("%hu %hu %hu ", img.pixel[i][j][0],
+                                   img.pixel[i][j][1],
+                                   img.pixel[i][j][2]);
+
+        }
+        printf("\n");
+    }
+    return img;
+}
 
 Image escala_de_cinza(Image img) {
 
@@ -269,23 +287,9 @@ int main() {
                 break;
             }
         }
-
     }
 
-    // print type of image
-    printf("P3\n");
-    // print width height and color of image
-    printf("%u %u\n255\n", img.width, img.height);
+    img = printar_imagem(img);
 
-    // print pixels of image
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            printf("%hu %hu %hu ", img.pixel[i][j][0],
-                                   img.pixel[i][j][1],
-                                   img.pixel[i][j][2]);
-
-        }
-        printf("\n");
-    }
     return 0;
 }
